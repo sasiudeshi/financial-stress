@@ -1,0 +1,586 @@
+/* ==========================================================================
+   Financial Weather — calm financial stress check
+   ========================================================================== */
+
+:root {
+  /* Palette */
+  --color-bg: #F5F8F6;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #EDF1EE;
+  --color-border: #DCE3DE;
+
+  --color-primary: #16333A;
+  --color-primary-hover: #0F262B;
+  --color-on-primary: #F5F8F6;
+
+  --color-accent: #B8873E;       /* backgrounds / icons / borders only */
+  --color-accent-text: #8C661F;  /* AA-safe on white, for any text use */
+
+  --color-text: #1E2B2C;
+  --color-text-muted: #5B6B6A;
+
+  /* State colors: -fill for large graphic use (icons, bars, >=3:1),
+     -text for any label/copy use (>=4.5:1 on white/mist), -bg for tints. */
+  --color-low-fill: #7E9C77;
+  --color-low-text: #3F5C3B;
+  --color-low-bg: #E4EDE1;
+
+  --color-moderate-fill: #D9A441;
+  --color-moderate-text: #7A5314;
+  --color-moderate-bg: #F6E8CF;
+
+  --color-high-fill: #BC7A64;
+  --color-high-text: #7A4433;
+  --color-high-bg: #F1DDD6;
+
+  --color-danger-text: #9A3B2E;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* Layout */
+  --wrap-width: 760px;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-soft: 0 1px 2px rgba(22, 51, 58, 0.04), 0 8px 24px -12px rgba(22, 51, 58, 0.12);
+
+  --transition-fast: 150ms ease;
+  --transition-slow: 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Reset / base                                                          */
+/* ---------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: light; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  font-weight: 600;
+  margin: 0 0 0.4em;
+}
+
+p { margin: 0 0 1em; }
+
+.wrap {
+  max-width: var(--wrap-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Tabular, monospace treatment for every numeric figure */
+.num, input[type="number"] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Focus visibility (accessibility floor)                                */
+/* ---------------------------------------------------------------------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Header                                                                */
+/* ---------------------------------------------------------------------- */
+
+.site-header {
+  padding: 28px 0 8px;
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--color-primary);
+}
+
+.brand__mark { flex-shrink: 0; }
+
+.site-header__tagline {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Intro                                                                 */
+/* ---------------------------------------------------------------------- */
+
+.intro {
+  padding: 20px 0 8px;
+}
+
+.intro h1 {
+  font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.intro__body {
+  color: var(--color-text-muted);
+  max-width: 56ch;
+  font-size: 1.02rem;
+}
+
+.intro em {
+  font-style: normal;
+  font-family: var(--font-display);
+  color: var(--color-primary);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Form sections                                                        */
+/* ---------------------------------------------------------------------- */
+
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px clamp(16px, 4vw, 28px) 8px;
+  margin: 0 0 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+.section legend {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--color-primary);
+  padding: 0 4px;
+}
+
+.section-note {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  margin-top: -4px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+  color: var(--color-text);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.98rem;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.field select { font-family: var(--font-body); }
+
+.field input:hover, .field select:hover { border-color: #B9C4BE; }
+
+.field input:focus, .field select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(22, 51, 58, 0.12);
+}
+
+.field input[aria-invalid="true"], .field select[aria-invalid="true"] {
+  border-color: var(--color-danger-text);
+}
+
+.field-hint {
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  margin: 4px 0 0;
+}
+
+.field-error {
+  color: var(--color-danger-text);
+  font-size: 0.84rem;
+  margin: 4px 0 0;
+  font-weight: 600;
+  min-height: 0;
+}
+
+.field-error:empty { display: none; }
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 20px;
+}
+
+@media (min-width: 560px) {
+  .field-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.submit-error {
+  background: var(--color-high-bg);
+  color: var(--color-danger-text);
+  border: 1px solid var(--color-high-fill);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin: 0 0 20px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Sticky submit bar                                                     */
+/* ---------------------------------------------------------------------- */
+
+.submit-bar {
+  position: sticky;
+  bottom: 0;
+  background: rgba(245, 248, 246, 0.9);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--color-border);
+  padding: 14px 0;
+  margin-top: 8px;
+}
+
+.submit-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.submit-bar__status {
+  color: var(--color-danger-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 26px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.btn--primary:hover { background: var(--color-primary-hover); }
+.btn--primary:active { transform: translateY(1px); }
+.btn--primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn--secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+
+.btn--secondary:hover { background: var(--color-surface-alt); }
+
+/* ---------------------------------------------------------------------- */
+/* Results view                                                          */
+/* ---------------------------------------------------------------------- */
+
+#results-view { padding: 24px 0 60px; }
+
+.results-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(20px, 5vw, 44px);
+  text-align: center;
+}
+
+.results-visual {
+  width: 220px;
+  max-width: 60%;
+  aspect-ratio: 1 / 1; /* height derives from the (possibly capped) width, so it stays square responsively */
+  margin: 0 auto 8px;
+}
+
+.results-visual canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.weather-svg { width: 100%; height: auto; }
+
+.weather-orb,
+.weather-cloud,
+.weather-rain {
+  transform-origin: center;
+}
+
+.results-label {
+  font-size: clamp(2rem, 1.6rem + 1.5vw, 2.7rem);
+  margin-bottom: 4px;
+}
+
+.results-label[data-level="Low"] { color: var(--color-low-text); }
+.results-label[data-level="Moderate"] { color: var(--color-moderate-text); }
+.results-label[data-level="High"] { color: var(--color-high-text); }
+
+.results-sublabel {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  max-width: 48ch;
+  margin: 0 auto 32px;
+}
+
+.section-title-sm {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-primary);
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.confidence {
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto 36px;
+}
+
+.confidence-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 52px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.confidence-row__label { color: var(--color-text); font-weight: 600; }
+
+.confidence-bar {
+  height: 10px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.confidence-bar__fill {
+  height: 100%;
+  width: 0%;
+  /* Always render a visible sliver, even at 0%, so an empty bar reads as
+     "we checked, it's zero" rather than "this didn't load". */
+  min-width: 6px;
+  border-radius: 999px;
+  transition: width var(--transition-slow);
+}
+
+.confidence-row[data-level="Low"] .confidence-bar__fill { background: var(--color-low-fill); }
+.confidence-row[data-level="Moderate"] .confidence-bar__fill { background: var(--color-moderate-fill); }
+.confidence-row[data-level="High"] .confidence-bar__fill { background: var(--color-high-fill); }
+
+.confidence-row__value { text-align: right; color: var(--color-text-muted); }
+
+.results-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 620px) {
+  .results-columns { grid-template-columns: 1fr 1fr; }
+}
+
+.factor-list, .recommendation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.factor-list li, .recommendation-list li {
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.factor-list li { border-left: 3px solid var(--color-accent); }
+.recommendation-list li { border-left: 3px solid var(--color-primary); }
+
+.disclaimer {
+  text-align: left;
+  background: var(--color-moderate-bg);
+  border: 1px solid var(--color-moderate-fill);
+  color: var(--color-moderate-text);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Motion — choreographed, respecting reduced-motion throughout           */
+/* ---------------------------------------------------------------------- */
+/* Every rule below only takes effect inside the no-preference block --
+   the JS that drives IntersectionObserver reveal, the results
+   choreography, the count-up, and the card tilt ALL separately check
+   prefers-reduced-motion themselves (see app.js) before doing anything,
+   so this isn't just a CSS-only guard -- the animated states below are
+   simply never entered at all when reduced motion is requested; elements
+   default to fully visible/at-rest outside this media block. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Form section scroll-in (IntersectionObserver-driven, see app.js
+     setupScrollReveal) -- .reveal starts hidden/offset; JS adds
+     .reveal--visible once the element has scrolled into view. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 550ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.reveal--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Results reveal choreography (see app.js runResultsChoreography) --
+     each stage starts hidden/offset; JS adds .stage-visible on a
+     staggered schedule. Bar fill % and the count-up number are animated
+     directly via JS (see animateValue), not by these transitions. */
+  .results-visual {
+    opacity: 0;
+    transform: scale(0.86);
+    transition: opacity 500ms ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .results-visual.stage-visible { opacity: 1; transform: scale(1); }
+
+  .results-heading-group {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 400ms ease, transform 400ms ease;
+  }
+  .results-heading-group.stage-visible { opacity: 1; transform: translateY(0); }
+
+  .confidence {
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .confidence.stage-visible { opacity: 1; }
+
+  .cascade-item {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 350ms ease, transform 350ms ease;
+  }
+  .cascade-item.stage-visible { opacity: 1; transform: translateY(0); }
+
+  /* Weather orb/cloud/rain -- only present in the DOM when the Three.js
+     scene fails to init and the static SVG fallback is used instead. */
+  .weather-orb {
+    animation: orb-breathe 4.5s ease-in-out infinite;
+  }
+  @keyframes orb-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035); }
+  }
+
+  .weather-cloud--1 { animation: drift-1 7s ease-in-out infinite; }
+  .weather-cloud--2 { animation: drift-2 8.5s ease-in-out infinite; }
+  @keyframes drift-1 {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+  }
+  @keyframes drift-2 {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-5px); }
+  }
+
+  .weather-svg--stormy .weather-rain line {
+    animation: rain-fall 900ms linear infinite;
+  }
+  .weather-svg--stormy .weather-rain line:nth-child(2) { animation-delay: 150ms; }
+  .weather-svg--stormy .weather-rain line:nth-child(3) { animation-delay: 300ms; }
+  .weather-svg--stormy .weather-rain line:nth-child(4) { animation-delay: 450ms; }
+  @keyframes rain-fall {
+    0% { opacity: 0; transform: translateY(-3px); }
+    40% { opacity: 0.55; }
+    100% { opacity: 0; transform: translateY(6px); }
+  }
+
+  /* Card tilt micro-interaction (see app.js setupCardTilt) -- JS writes
+     the rotateX/rotateY transform directly on mousemove; this just
+     smooths it and animates the shadow lift. JS only attaches the
+     mousemove listeners at all when this media query matches. */
+  .section, .results-card {
+    transition: transform 180ms ease, box-shadow 220ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+}
+
+.section:hover, .results-card:hover {
+  box-shadow: 0 2px 4px rgba(22, 51, 58, 0.06), 0 18px 34px -14px rgba(22, 51, 58, 0.2);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Mobile (floor: 375px)                                                 */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  .wrap { padding: 0 14px; }
+  .section { padding: 20px 14px 6px; }
+  .field-grid { grid-template-columns: repeat(2, 1fr); gap: 2px 12px; }
+  .confidence-row { grid-template-columns: 96px 1fr 44px; font-size: 0.82rem; }
+  .submit-bar__inner { flex-direction: column; align-items: stretch; gap: 8px; }
+  .btn--primary { width: 100%; }
+}

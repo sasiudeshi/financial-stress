@@ -1,0 +1,19 @@
+# Python 3.14.0 (see README.md "Prerequisites" for supported versions)
+
+# ---- Runtime (needed to run the API / model pipeline) ----
+pandas==2.3.3
+numpy==2.4.0
+scikit-learn==1.8.0
+joblib==1.5.3
+xgboost==3.4.1
+shap==0.52.0
+matplotlib==3.11.1
+fastapi==0.141.1
+uvicorn==0.52.3
+pydantic==2.13.4
+
+# ---- Dev-only (testing / frontend self-checks -- not required to run the API) ----
+pytest==9.0.1
+playwright==1.56.0
+httpx==0.28.1       # required by fastapi.testclient.TestClient, used only in tests/ and scripts/
+requests==2.32.5    # used only by scripts/validate_frontend.py to poll a live server

@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Financial Weather &mdash; a calm financial stress check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <span class="brand">
+      <svg class="brand__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <circle cx="16" cy="16" r="9" fill="var(--color-accent)"></circle>
+      </svg>
+      Financial Weather
+    </span>
+    <p class="site-header__tagline">A calm check-in on your spending, not a diagnosis.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ FORM VIEW ============ -->
+  <section id="form-view" aria-labelledby="intro-heading">
+    <div class="intro reveal">
+      <h1 id="intro-heading">How's your financial weather lately?</h1>
+      <p class="intro__body">
+        Answer a few questions about your income and spending. We'll estimate whether things
+        currently look <em>Clear</em>, <em>Changeable</em>, or <em>Stormy</em> &mdash; along with the
+        few factors that mattered most and some gentle, general suggestions. Nothing here is stored
+        or shared.
+      </p>
+    </div>
+
+    <form id="stress-form" novalidate>
+
+      <fieldset class="section reveal">
+        <legend>About you</legend>
+
+        <div class="field">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" min="18" max="100" step="1" required inputmode="numeric">
+          <p class="field-hint">Your age in years (18&ndash;100).</p>
+          <p class="field-error" id="age-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="employment_status">Employment status</label>
+          <select id="employment_status" name="employment_status" required>
+            <option value="" disabled selected>Choose one&hellip;</option>
+            <option value="Employed">Employed</option>
+            <option value="Self-employed">Self-employed</option>
+            <option value="Student">Student</option>
+            <option value="Unemployed">Unemployed</option>
+          </select>
+          <p class="field-error" id="employment_status-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="dependents">Dependents</label>
+          <input type="number" id="dependents" name="dependents" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">Number of people financially dependent on you.</p>
+          <p class="field-error" id="dependents-error" role="alert"></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="section reveal">
+        <legend>Income &amp; expenditure</legend>
+
+        <div class="field">
+          <label for="monthly_income">Monthly income</label>
+          <input type="number" id="monthly_income" name="monthly_income" min="0.01" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Your total monthly income.</p>
+          <p class="field-error" id="monthly_income-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="monthly_expenditure">Monthly expenditure</label>
+          <input type="number" id="monthly_expenditure" name="monthly_expenditure" min="0.01" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Your total monthly spending, across everything.</p>
+          <p class="field-error" id="monthly_expenditure-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="essential_expenditure">Essential expenditure</label>
+          <input type="number" id="essential_expenditure" name="essential_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Portion spent on essentials &mdash; housing, food, bills, healthcare.</p>
+          <p class="field-error" id="essential_expenditure-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="non_essential_expenditure">Non-essential expenditure</label>
+          <input type="number" id="non_essential_expenditure" name="non_essential_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Portion spent on discretionary items &mdash; entertainment, shopping, etc.</p>
+          <p class="field-error" id="non_essential_expenditure-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="planned_expenditure">Planned expenditure</label>
+          <input type="number" id="planned_expenditure" name="planned_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">What you intended to spend this month, before it happened.</p>
+          <p class="field-error" id="planned_expenditure-error" role="alert"></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="section reveal">
+        <legend>Category breakdown</legend>
+        <p class="section-note">
+          Roughly how much of your monthly expenditure falls into each category? They don't need to
+          add up exactly.
+        </p>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="housing_expenditure">Housing</label>
+            <input type="number" id="housing_expenditure" name="housing_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="housing_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="utility_expenditure">Utilities</label>
+            <input type="number" id="utility_expenditure" name="utility_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="utility_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="food_expenditure">Food</label>
+            <input type="number" id="food_expenditure" name="food_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="food_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="healthcare_expenditure">Healthcare</label>
+            <input type="number" id="healthcare_expenditure" name="healthcare_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="healthcare_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="education_expenditure">Education</label>
+            <input type="number" id="education_expenditure" name="education_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="education_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="transportation_expenditure">Transportation</label>
+            <input type="number" id="transportation_expenditure" name="transportation_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="transportation_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="shopping_expenditure">Shopping</label>
+            <input type="number" id="shopping_expenditure" name="shopping_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="shopping_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="entertainment_expenditure">Entertainment</label>
+            <input type="number" id="entertainment_expenditure" name="entertainment_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="entertainment_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="subscription_expenditure">Subscriptions</label>
+            <input type="number" id="subscription_expenditure" name="subscription_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="subscription_expenditure-error" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="other_expenditure">Other</label>
+            <input type="number" id="other_expenditure" name="other_expenditure" min="0" step="0.01" required inputmode="decimal" class="num">
+            <p class="field-error" id="other_expenditure-error" role="alert"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="section reveal">
+        <legend>Debt &amp; savings</legend>
+
+        <div class="field">
+          <label for="debt_repayment">Debt repayment</label>
+          <input type="number" id="debt_repayment" name="debt_repayment" min="0" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Monthly repayment across all loans and debts.</p>
+          <p class="field-error" id="debt_repayment-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="num_financial_commitments">Financial commitments</label>
+          <input type="number" id="num_financial_commitments" name="num_financial_commitments" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">Number of active loans or financial commitments.</p>
+          <p class="field-error" id="num_financial_commitments-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="savings">Savings this month</label>
+          <input type="number" id="savings" name="savings" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Can be negative &mdash; that just means you spent more than you earned this month.</p>
+          <p class="field-error" id="savings-error" role="alert"></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="section reveal">
+        <legend>Spending behavior</legend>
+
+        <div class="field">
+          <label for="transaction_frequency">Transactions per month</label>
+          <input type="number" id="transaction_frequency" name="transaction_frequency" min="1" step="1" required inputmode="numeric">
+          <p class="field-hint">Roughly how many transactions you make in a month.</p>
+          <p class="field-error" id="transaction_frequency-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="spending_volatility">Spending volatility</label>
+          <input type="number" id="spending_volatility" name="spending_volatility" min="0" step="0.01" required inputmode="decimal" class="num">
+          <p class="field-hint">Roughly how much your spending swings from one month to the next.</p>
+          <p class="field-error" id="spending_volatility-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="impulse_purchase_frequency">Impulse purchases</label>
+          <input type="number" id="impulse_purchase_frequency" name="impulse_purchase_frequency" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">Impulse purchases per month.</p>
+          <p class="field-error" id="impulse_purchase_frequency-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="online_purchase_frequency">Online purchases</label>
+          <input type="number" id="online_purchase_frequency" name="online_purchase_frequency" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">Online purchases per month.</p>
+          <p class="field-error" id="online_purchase_frequency-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="unplanned_expenditure_frequency">Unplanned expenses</label>
+          <input type="number" id="unplanned_expenditure_frequency" name="unplanned_expenditure_frequency" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">Unplanned expenses per month.</p>
+          <p class="field-error" id="unplanned_expenditure_frequency-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="budget_exceed_frequency_last3mo">Budget exceeded (last 3 months)</label>
+          <input type="number" id="budget_exceed_frequency_last3mo" name="budget_exceed_frequency_last3mo" min="0" max="3" step="1" required inputmode="numeric">
+          <p class="field-hint">Months out of the last 3 where you went over budget (0&ndash;3).</p>
+          <p class="field-error" id="budget_exceed_frequency_last3mo-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="can_save_regularly">Can you save regularly?</label>
+          <select id="can_save_regularly" name="can_save_regularly" required>
+            <option value="" disabled selected>Choose one&hellip;</option>
+            <option value="Yes">Yes</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="No">No</option>
+          </select>
+          <p class="field-error" id="can_save_regularly-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="balance_check_frequency_per_week">Balance checks per week</label>
+          <input type="number" id="balance_check_frequency_per_week" name="balance_check_frequency_per_week" min="0" step="1" required inputmode="numeric">
+          <p class="field-hint">How often you check your account balance in a typical week.</p>
+          <p class="field-error" id="balance_check_frequency_per_week-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="spending_change_during_difficulty">Spending change during hard periods</label>
+          <input type="number" id="spending_change_during_difficulty" name="spending_change_during_difficulty" min="1" max="5" step="1" required inputmode="numeric">
+          <p class="field-hint">1 = I spend much less than usual, 5 = I spend much more than usual.</p>
+          <p class="field-error" id="spending_change_during_difficulty-error" role="alert"></p>
+        </div>
+      </fieldset>
+
+      <div id="submit-error" class="submit-error" role="alert" hidden></div>
+    </form>
+  </section>
+
+  <!-- ============ RESULTS VIEW ============ -->
+  <section id="results-view" hidden aria-labelledby="results-heading">
+    <div class="results-card">
+      <div class="results-visual" id="results-visual" aria-hidden="true"></div>
+
+      <div class="results-heading-group" id="results-heading-group">
+        <h1 id="results-heading" class="results-label" tabindex="-1">&nbsp;</h1>
+        <p class="results-sublabel" id="results-state-sublabel"></p>
+      </div>
+
+      <div class="confidence" aria-label="Confidence breakdown">
+        <h2 class="section-title-sm">Confidence breakdown</h2>
+        <div class="confidence-row" data-level="Low">
+          <span class="confidence-row__label">Clear (Low)</span>
+          <div class="confidence-bar"><div class="confidence-bar__fill" data-fill="Low"></div></div>
+          <span class="confidence-row__value num" data-value="Low">0%</span>
+        </div>
+        <div class="confidence-row" data-level="Moderate">
+          <span class="confidence-row__label">Changeable (Moderate)</span>
+          <div class="confidence-bar"><div class="confidence-bar__fill" data-fill="Moderate"></div></div>
+          <span class="confidence-row__value num" data-value="Moderate">0%</span>
+        </div>
+        <div class="confidence-row" data-level="High">
+          <span class="confidence-row__label">Stormy (High)</span>
+          <div class="confidence-bar"><div class="confidence-bar__fill" data-fill="High"></div></div>
+          <span class="confidence-row__value num" data-value="High">0%</span>
+        </div>
+      </div>
+
+      <div class="results-columns">
+        <div class="results-block">
+          <h2 class="section-title-sm">What stood out</h2>
+          <ul class="factor-list" id="factor-list"></ul>
+        </div>
+
+        <div class="results-block">
+          <h2 class="section-title-sm">A few gentle suggestions</h2>
+          <ul class="recommendation-list" id="recommendation-list"></ul>
+        </div>
+      </div>
+
+      <div class="disclaimer" id="results-disclaimer" role="note"></div>
+
+      <button type="button" id="start-over" class="btn btn--secondary">Check another scenario</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="submit-bar" id="submit-bar">
+  <div class="wrap submit-bar__inner">
+    <span class="submit-bar__status" id="submit-status" aria-live="polite"></span>
+    <button type="submit" form="stress-form" id="submit-btn" class="btn btn--primary">
+      <span id="submit-btn-label">Check my financial weather</span>
+    </button>
+  </div>
+</div>
+
+<template id="weather-clear-tpl">
+  <svg viewBox="0 0 200 160" class="weather-svg weather-svg--clear" role="img" aria-label="Clear skies illustration">
+    <circle cx="100" cy="80" r="42" fill="var(--color-low-fill)" class="weather-orb"></circle>
+    <circle cx="100" cy="80" r="42" fill="none" stroke="var(--color-low-fill)" stroke-width="1.5" opacity="0.35" class="weather-ring"></circle>
+  </svg>
+</template>
+
+<template id="weather-changeable-tpl">
+  <svg viewBox="0 0 200 160" class="weather-svg weather-svg--changeable" role="img" aria-label="Changeable skies illustration">
+    <circle cx="100" cy="82" r="40" fill="var(--color-moderate-fill)" class="weather-orb"></circle>
+    <path class="weather-cloud weather-cloud--1" d="M52 96c-14 0-24 10-24 21s10 19 24 19h70c13 0 22-9 22-19 0-9-7-17-17-19 1-14-11-25-25-25-11 0-20 7-23 17-1 0-2-1-3-1-11 0-23 3-24 8z" fill="var(--color-moderate-bg)"></path>
+    <path class="weather-cloud weather-cloud--2" d="M110 70c-9 0-16 6-17 14-8 1-14 7-14 14s7 13 15 13h44c8 0 14-6 14-13 0-6-4-11-10-13 0-9-7-16-16-16-6 0-10 2-16 5z" fill="var(--color-moderate-bg)" opacity="0.9"></path>
+  </svg>
+</template>
+
+<template id="weather-stormy-tpl">
+  <svg viewBox="0 0 200 160" class="weather-svg weather-svg--stormy" role="img" aria-label="Stormy skies illustration">
+    <circle cx="100" cy="78" r="36" fill="var(--color-high-fill)" class="weather-orb" opacity="0.5"></circle>
+    <path class="weather-cloud weather-cloud--1" d="M46 90c-15 0-26 10-26 22s11 20 26 20h76c14 0 24-9 24-20 0-10-8-18-19-20 1-15-12-27-27-27-12 0-21 7-25 18-1 0-2-1-3-1-12 0-25 3-26 8z" fill="var(--color-high-fill)"></path>
+    <path class="weather-cloud weather-cloud--2" d="M112 66c-10 0-18 7-19 15-9 1-15 8-15 15s8 14 17 14h48c9 0 15-6 15-14 0-7-5-12-11-14 0-10-8-17-17-17-7 0-11 2-18 6z" fill="var(--color-high-text)" opacity="0.85"></path>
+    <g class="weather-rain" stroke="var(--color-high-text)" stroke-width="2.5" stroke-linecap="round" opacity="0.55">
+      <line x1="72" y1="132" x2="65" y2="146"></line>
+      <line x1="96" y1="134" x2="89" y2="150"></line>
+      <line x1="120" y1="132" x2="113" y2="146"></line>
+      <line x1="144" y1="130" x2="138" y2="144"></line>
+    </g>
+  </svg>
+</template>
+
+<script src="/app.js"></script>
+</body>
+</html>
